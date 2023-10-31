@@ -1,5 +1,11 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+
+![image](https://github.com/subhash131/healthcare-dashboard-ui-concept/assets/64570322/2e48184c-57ec-49c0-ac14-a0d921ac3bf5)
+
+This Design was inspired by Adhiari Subekti @Dribbble
+
+
 ## Getting Started
 
 First, run the development server:
