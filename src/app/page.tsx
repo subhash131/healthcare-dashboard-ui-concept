@@ -1,113 +1,228 @@
-import Image from 'next/image'
+"use client";
+import BlueDot from "@/components/BlueDot";
+import MyBodyCondition from "@/components/MyBodyCondition";
+import MySchedule from "@/components/MySchedule";
+import Pin from "@/components/Pin";
+import {
+  Activity,
+  Bold,
+  Droplet,
+  Droplets,
+  Heart,
+  HeartPulse,
+  Stethoscope,
+  Syringe,
+} from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
 
-export default function Home() {
+const heartStatus = [
+  {
+    name: "Hemoglobin",
+    normalRange: "11 - 16",
+    result: "12 g/dl",
+    range: 10,
+    icon: <Droplets strokeWidth={1} />,
+  },
+  {
+    name: "Heart Rate",
+    normalRange: "60-100",
+    result: "90 bpm",
+    range: 13,
+    icon: <Stethoscope strokeWidth={1} />,
+  },
+  {
+    name: "Blood Count",
+    normalRange: "4500-11,000",
+    result: "9000 mm3",
+    range: 12,
+    icon: <HeartPulse strokeWidth={1} />,
+  },
+  {
+    name: "Glucose Level",
+    normalRange: "70-100",
+    result: "70 mg/dL",
+    range: 8,
+    icon: <Activity strokeWidth={1} />,
+  },
+];
+
+const HeartCondition = ({
+  name,
+  normalRange,
+  result,
+  range,
+  icon,
+  selectedItem,
+  onClick,
+}: {
+  name: string;
+  normalRange: string;
+  result: string;
+  range: number;
+  icon: React.JSX.Element;
+  selectedItem: string;
+  onClick: () => void;
+}) => {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div
+      className={`border rounded-2xl ${
+        name === selectedItem ? "bg-[#0067FF] text-white" : "bg-white"
+      } p-1 cursor-pointer`}
+      onClick={onClick}
+    >
+      <div className="flex gap-2 p-2">
+        <div
+          className={`w-12 rounded-2xl h-12  p-2 grid place-items-center ${
+            selectedItem === name
+              ? "text-gray-600 bg-white"
+              : "text-gray-500 bg-gray-100"
+          }`}
+        >
+          {icon}
+        </div>
+        <div className="p-2 ">
+          <p
+            className={`text-xs ${
+              name === selectedItem ? "text-white" : "text-gray-600"
+            } `}
           >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+            {name}
+          </p>
+          <p className="text-xs font-medium">{normalRange}</p>
         </div>
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      <div
+        className={`w-full ${
+          name === selectedItem ? "bg-white" : "bg-gray-100"
+        }  h-16 mt-1.5 rounded-2xl py-1 px-2 flex`}
+      >
+        <div className="flex-grow py-4 flex gap-1">
+          <span
+            className={`${selectedItem === name ? "text-[#0067FF] " : ""} `}
+          >
+            {icon}
+          </span>
+          <p className="flex leading-[1.3rem]">
+            {[...Array(14)].map((_, index) => {
+              return (
+                <span
+                  key={index}
+                  className={`${
+                    index >= range
+                      ? `${name === selectedItem ? "text-black" : "text-white"}`
+                      : `${
+                          name === selectedItem
+                            ? "text-[#0067FF]"
+                            : "text-black"
+                        }`
+                  }`}
+                >
+                  |
+                </span>
+              );
+            })}
+          </p>
+        </div>
+        <div
+          className={`w-1/3 ${
+            selectedItem === name ? "bg-[#0067FF] text-white" : "bg-gray-200"
+          }  rounded-2xl text-sm items-center justify-center flex font-medium`}
+        >
+          <p className="text-xs font-medium break-words text-center -mt-2">
+            {result.split(" ")[0]} <br />
+            <span className="absolute text-[0.5rem] ml-[-0.4rem] mt-[-0.3rem]">
+              {result.split(" ")[1]}
+            </span>
+          </p>
+        </div>
       </div>
+    </div>
+  );
+};
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+export default function Home() {
+  const [selectedItem, setSelectedItem] = useState("Heart Rate");
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
+  return (
+    <main className="bg-gray-100 w-screen h-screen overflow-hidden">
+      <div className="bg-hite w-[90vw] h-[80vh] flex mt-[16vh] ml-[8vw]">
+        <div className="ml-12 px-5 flex-1 ">
+          <p className="text-5xl">
+            Overview <br /> Conditions
           </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+          <div className="h-[60vh] mt-24 relative">
+            <div className="bg-[#F5F5F5] border-2 border-white w-80 h-80 rounded-full flex justify-center items-center">
+              <div className="bg-[#F5F5F5] border-2 border-white w-[17rem] h-[17rem] rounded-full flex justify-center items-center"></div>
+              <Image
+                src="/assets/human-heart.png"
+                alt="heart"
+                width={400}
+                height={400}
+                className="absolute -top-20"
+              />
+            </div>
+            <Pin position="left-40 -top-4" />
+            <Pin position="left-40 top-20" />
+            <Pin position="left-12 top-40" />
+            <Pin position="left-56 top-64" />
+            <div className="backdrop-blur-2xl bg-white/30  border-white w-32 h-20 p-2 rounded-xl absolute top-56 border-2 left-10 flex gap-2">
+              <Heart
+                strokeWidth={1.2}
+                width={14}
+                color="#0067FF"
+                fill="#0067FF"
+              />
+              <div>
+                <p className="text-xs">Heart Rate</p>
+                <p className="font-medium text-sm">90 bpm</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="right flex-1">
+          <div className="grid grid-cols-3 grid-rows-3 bg-re\d-400 w-full h-full gap-6">
+            <div className="bg-gren-300 col-span-2 row-span-2">
+              <div className="flex items-center p-2  gap-2">
+                <BlueDot />
+                <p className="leading-4">My Heart Condition</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4 grid-rows-2 h-80">
+                {heartStatus.map((status, index) => {
+                  return (
+                    <HeartCondition
+                      key={index}
+                      name={status.name}
+                      normalRange={status.normalRange}
+                      result={status.result}
+                      range={status.range}
+                      icon={status.icon}
+                      selectedItem={selectedItem}
+                      onClick={() => {
+                        setSelectedItem(status.name);
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+            <div className="bg--300 row-span-2">
+              <div className="flex items-center p-2  gap-2">
+                <BlueDot />
+                <p className="leading-4">My Schedule</p>
+              </div>
+              <MySchedule />
+            </div>
+            <div className="bg--300 col-span-3">
+              <div className="flex items-center p-2  gap-2">
+                <BlueDot />
+                <p className="leading-4">My Body Condition</p>
+              </div>
+              <MyBodyCondition />
+            </div>
+          </div>
+        </div>
       </div>
     </main>
-  )
+  );
 }
